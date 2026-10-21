@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101414">
+    <title>gabriel.preda // sys.node</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="halt-screen" class="halt-screen" hidden>
+      <div class="halt-screen__message" role="status" aria-live="polite">
+        <p class="halt-screen__title">[ SYSTEM HALTED - POWER DOWN ]</p>
+        <p>Session terminated by user. All local buffers cleared.</p>
+        <button type="button" id="btn-boot" class="boot-button">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2v10M6.2 5.8a8 8 0 1 0 11.6 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>WAKE-ON-LAN // BOOT</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="deck" class="deck">
+      <header class="deck__header">
+        <div class="deck__status">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span>NODE: ONLINE</span>
+        </div>
+        <button type="button" id="btn-halt" class="halt-button" aria-label="Halt System">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </header>
+
+      <nav class="deck__keypad" aria-label="System navigation">
+        <button type="button" class="hw-key is-active" data-target="terminal" aria-current="page">
+          <span class="key-led" aria-hidden="true"></span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="m4 7 5 5-5 5m7 0h9M3 3h18v18H3z" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/>
+          </svg>
+          <span>CONSOLE</span>
+        </button>
+        <a href="https://github.com/gabriel-preda" target="_blank" rel="noopener noreferrer" class="hw-key">
+          <span class="key-led" aria-hidden="true"></span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3 3 8v8l9 5 9-5V8l-9-5Z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="m3.5 8.5 8.5 5 8.5-5M12 13.5V21" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span>PROJECTS ↗</span>
+        </a>
+        <button type="button" class="hw-key" data-target="manual" id="key-manual">
+          <span class="key-led" aria-hidden="true"></span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v17H6.5A2.5 2.5 0 0 0 4 21.5v-17Z" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20M8 7h8m-8 4h6" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <span>MAN_HELP</span>
+        </button>
+        <button type="button" class="hw-key" data-target="quotes">
+          <span class="key-led" aria-hidden="true"></span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 4h10M7 20h10M8 4c0 4 4 4 4 8s-4 4-4 8m8-16c0 4-4 4-4 8s4 4 4 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>QUOTES</span>
+        </button>
+        <button type="button" class="hw-key" data-target="tools">
+          <span class="key-led" aria-hidden="true"></span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 4a4 4 0 0 0-5 5l-5.5 5.5a2.12 2.12 0 0 0 3 3L12 12a4 4 0 0 0 5-5l-2.5 2.5-3-3L14 4Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          <span>TOOLS</span>
+        </button>
+      </nav>
+
+      <div class="deck__screen">
+        <main id="view-terminal" class="screen-view">
+          <header class="terminal-header">
+            <p class="terminal-header__eyebrow">/home/node1 :: secure shell</p>
+            <h1>GABRIEL PREDA</h1>
+            <p>Just a guy with a Terminal</p>
+          </header>
+          <div id="term-log" class="term-log" role="log" aria-live="polite" aria-relevant="additions">
+            <p class="term-line">System initialized. Type 'help' or press [MAN_HELP] for available directives.</p>
+          </div>
+          <form class="term-prompt" autocomplete="off">
+            <label class="prompt-prefix" for="cmd-input">root@node1:~#</label>
+            <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus placeholder="enter command..." aria-label="Terminal command">
+          </form>
+        </main>
+
+        <section id="view-manual" class="screen-view" hidden aria-labelledby="manual-title">
+          <h2 id="manual-title">MANUAL PAGES // SYSTEM DIRECTIVES (1)</h2>
+          <dl class="man-list">
+            <div class="man-list__entry">
+              <dt>projects</dt>
+              <dd>Lists the projects; some of them still need documentation.</dd>
+            </div>
+            <div class="man-list__entry">
+              <dt>ping</dt>
+              <dd>Checks whether the server is responding or just ignoring requests.</dd>
+            </div>
+            <div class="man-list__entry">
+              <dt>traceroute</dt>
+              <dd>Traces the packets and a few questionable routing decisions.</dd>
+            </div>
+            <div class="man-list__entry">
+              <dt>sudo</dt>
+              <dd>Try again, this time with more confidence.</dd>
+            </div>
+            <div class="man-list__entry">
+              <dt>coffee</dt>
+              <dd>Restores the critical resource between keyboard and chair.</dd>
+            </div>
+            <div class="man-list__entry">
+              <dt>uptime</dt>
+              <dd>Shows how long the system has been running—and how long the admin can keep going.</dd>
+            </div>
+            <div class="man-list__entry">
+              <dt>rm -rf /</dt>
+              <dd>Command disabled. A backup is not a rollback strategy.</dd>
+            </div>
+            <div class="man-list__entry">
+              <dt>halt</dt>
+              <dd>Stops the session; all local buffers will be cleared.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section id="view-quotes" class="screen-view quotes-view" hidden aria-labelledby="quotes-title">
+          <div class="quote-card">
+            <p class="quote-card__eyebrow">FIELD NOTES // FAST EDITION</p>
+            <h2 id="quotes-title">QUOTE OF THE CENTURY</h2>
+            <blockquote id="quote-text">“It’s not a bug. It’s an undocumented feature.”</blockquote>
+            <p class="quote-card__attribution">— Anyone who wrote a line of code in production</p>
+            <div class="quote-countdown" role="timer" aria-label="Countdown until the next quote">
+              <span class="quote-countdown__label">TIME UNTIL NEW QUOTE</span>
+              <span id="quote-countdown" class="quote-countdown__value">Calculating...</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-tools" class="screen-view tools-view" hidden aria-labelledby="tools-title">
+          <div class="tools-card">
+            <p class="quote-card__eyebrow">UTILITY BAY // BUILD QUEUED</p>
+            <h2 id="tools-title">TOOLS</h2>
+            <div class="tools-status" role="status">
+              <span class="tools-status__indicator" aria-hidden="true"></span>
+              <span>UNDER CONSTRUCTION</span>
+            </div>
+            <p>Diagnostic utilities are being calibrated. Check back after the next maintenance window.</p>
+            <span class="tools-card__code">STATUS: 0% // DEPLOYMENT PENDING</span>
+          </div>
+        </section>
+      </div>
+
+      <footer class="deck__footer" aria-label="System telemetry">
+        <span>MEM: 64KB FREE</span>
+        <span>ERR_COUNT: <span id="err-counter">0</span></span>
+        <span>CONN: TLS_1.3</span>
+      </footer>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
